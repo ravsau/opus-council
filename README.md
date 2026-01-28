@@ -32,8 +32,8 @@ Inspired by [Karpathy's llm-council](https://github.com/karpathy/llm-council), b
           ┌─────────┘     │     └─────────┐
           ▼               ▼               ▼
     ┌──────────┐   ┌──────────┐   ┌──────────┐
-    │ GPT-5.1  │   │Gemini 3  │   │  Grok 4  │
-    │          │   │  Pro     │   │          │
+    │  GPT-4o  │   │ Gemini   │   │  Grok 2  │
+    │          │   │2.0 Flash │   │          │
     └──────────┘   └──────────┘   └──────────┘
 ```
 
@@ -78,20 +78,64 @@ tension between CRDTs and OT. Here's my synthesis...
 [Claude provides unified answer incorporating all viewpoints + its own analysis]
 ```
 
-## Implementation Plan
+## Installation
+
+### 1. Get an OpenRouter API Key
+
+Sign up at [openrouter.ai](https://openrouter.ai) and get your API key.
+
+### 2. Add API Key to ~/.env
+
+```bash
+echo "OPENROUTER_API_KEY=your_key_here" >> ~/.env
+```
+
+### 3. Install the Skill
+
+**Option A: Symlink to Claude Code skills directory**
+```bash
+ln -s /path/to/opus-council/skill ~/.claude/skills/council
+```
+
+**Option B: Copy the skill**
+```bash
+mkdir -p ~/.claude/skills/council
+cp -r skill/* ~/.claude/skills/council/
+```
+
+### 4. Update the script path
+
+Edit `~/.claude/skills/council/SKILL.md` and update the path to `council.sh` if needed.
+
+### 5. Use it!
+
+```
+/council What's the best way to implement authentication in a Next.js app?
+```
+
+## Files
+
+```
+skill/
+├── SKILL.md      # Skill definition for Claude Code
+└── council.sh    # Shell script that calls OpenRouter API
+```
+
+## Implementation Status
 
 ### Phase 1: Core Skill
-- [ ] Create `/council` Claude Code skill
-- [ ] OpenRouter API integration (async parallel calls)
-- [ ] Response formatting and injection
-- [ ] Basic model selection (GPT-5.1, Gemini 3 Pro, Grok 4)
+- [x] Create `/council` Claude Code skill
+- [x] OpenRouter API integration
+- [x] Response formatting and injection
+- [x] Basic model selection (GPT-4o, Gemini 2.0 Flash, Grok 2)
 
 ### Phase 2: Configuration
-- [ ] Configurable council members
+- [ ] Configurable council members via config file
 - [ ] Custom system prompts per council member
 - [ ] Token/cost tracking
 
 ### Phase 3: Advanced
+- [ ] Parallel API calls (currently sequential)
 - [ ] Council member review round (optional)
 - [ ] Confidence scoring
 - [ ] Response caching for identical queries
@@ -99,8 +143,9 @@ tension between CRDTs and OT. Here's my synthesis...
 ## Requirements
 
 - Claude Max subscription (for Opus access via Claude Code)
-- OpenRouter API key
+- OpenRouter API key (in `~/.env`)
 - Claude Code CLI installed
+- `jq` installed (`brew install jq` on macOS)
 
 ## Key Differentiators from llm-council
 
